@@ -170,6 +170,43 @@
             font-style: italic;
         }
 
+        /* Nút điều khiển nhạc */
+        #music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(245, 87, 108, 0.5);
+            z-index: 999;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        #music-control:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(245, 87, 108, 0.7);
+        }
+
+        #music-control.show {
+            display: block;
+        }
+
+        #music-control.playing {
+            animation: musicPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes musicPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
         /* Nút "Nàng đã đọc xong chưa?" */
         #read-button {
             display: none !important;
@@ -433,10 +470,26 @@
             .content-text[style*="font-size: 20px"] {
                 font-size: 16px !important;
             }
+            #music-control {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+                bottom: 15px;
+                right: 15px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Nhạc nền lãng mạn -->
+    <audio id="background-music" loop>
+        <!-- Bạn có thể thay đổi link nhạc này -->
+        <source src="https://cdn.pixabay.com/audio/2022/03/10/audio_48f45ffd7f.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Nút điều khiển nhạc -->
+    <button id="music-control" onclick="toggleMusic()" title="Bật/Tắt nhạc">🎵</button>
+
     <!-- Hoa rơi -->
     <div class="flower">🌸</div>
     <div class="flower">🌹</div>
@@ -510,6 +563,38 @@
         const countdownElement = document.getElementById('countdown');
         const giftBox = document.getElementById('gift-box');
         const instruction = document.getElementById('instruction');
+        const bgMusic = document.getElementById('background-music');
+        const musicControl = document.getElementById('music-control');
+        let isMusicPlaying = false;
+
+        // Hàm bật/tắt nhạc
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                musicControl.textContent = '🔇';
+                musicControl.classList.remove('playing');
+                isMusicPlaying = false;
+            } else {
+                bgMusic.play().catch(e => console.log('Autoplay prevented'));
+                musicControl.textContent = '🎵';
+                musicControl.classList.add('playing');
+                isMusicPlaying = true;
+            }
+        }
+
+        // Tự động phát nhạc khi mở quà
+        function playMusic() {
+            bgMusic.play().then(() => {
+                musicControl.classList.add('show', 'playing');
+                musicControl.textContent = '🎵';
+                isMusicPlaying = true;
+            }).catch(() => {
+                // Nếu autoplay bị chặn, hiện nút để user tự bật
+                musicControl.classList.add('show');
+                musicControl.textContent = '🔇';
+                isMusicPlaying = false;
+            });
+        }
 
         // Bắt đầu đếm ngược khi trang load
         const timer = setInterval(() => {
@@ -530,6 +615,9 @@
             document.getElementById('instruction').style.display = 'none';
             document.getElementById('love-message').classList.add('show');
             document.getElementById('read-button').classList.add('show');
+            
+            // Phát nhạc khi mở quà
+            playMusic();
         }
 
         function showChoices() {
