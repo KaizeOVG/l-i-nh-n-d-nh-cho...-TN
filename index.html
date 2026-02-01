@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lời Tỏ Tình Cho Nguyễn Thị Tuyết Nhi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #ffc3a0 75%, #ff9a9e 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Hộp quà ban đầu */
+        #gift-container {
+            position: relative;
+            z-index: 10;
+        }
+
+        #gift-box {
+            font-size: 120px;
+            cursor: not-allowed;
+            margin-top: 50px;
+            position: relative;
+            filter: drop-shadow(0 10px 30px rgba(255, 20, 147, 0.4));
+            transition: all 0.3s ease;
+        }
+
+        #gift-box.enabled {
+            cursor: pointer;
+            animation: wiggle 2s infinite, glow 2s ease-in-out infinite;
+        }
+
+        #gift-box.enabled:hover {
+            transform: scale(1.1);
+        }
+
+        #countdown {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 32px;
+            color: white;
+            background: linear-gradient(135deg, #ff6b9d, #c06c84);
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            animation: pulse 1s infinite;
+        }
+
+        #instruction {
+            margin-top: 30px;
+            font-size: 20px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-weight: 500;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 10px 30px rgba(255, 20, 147, 0.4)); }
+            50% { filter: drop-shadow(0 10px 50px rgba(255, 20, 147, 0.8)); }
+        }
+
+        /* Nội dung tỏ tình */
+        #love-message {
+            display: none;
+            animation: fadeInUp 1.5s ease-in-out;
+            max-width: 700px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px 25px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            margin: 20px 0;
+        }
+
+        h1 {
+            color: #ff1493;
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: slideDown 1s ease-out;
+        }
+
+        .content-text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555;
+            margin: 12px 0;
+            text-align: left;
+        }
+
+        .content-text strong {
+            color: #ff1493;
+            font-size: 20px;
+        }
+
+        img {
+            max-width: 200px;
+            border-radius: 50%;
+            margin: 20px 0;
+            box-shadow: 0 0 30px rgba(255, 20, 147, 0.6);
+            border: 5px solid white;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .heart {
+            color: #ff1493;
+            font-size: 50px;
+            animation: heartbeat 1.5s infinite;
+            margin: 15px 0;
+        }
+
+        .signature {
+            font-size: 18px;
+            color: #ff1493;
+            font-weight: 600;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
+        /* Nút "Nàng đã đọc xong chưa?" */
+        #read-button {
+            display: none;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 20px;
+            animation: fadeIn 2s ease-in-out;
+            box-shadow: 0 10px 30px rgba(245, 87, 108, 0.4);
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        #read-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(245, 87, 108, 0.6);
+        }
+
+        /* Nút lựa chọn */
+        .choice-button {
+            display: none;
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .choice-button:hover {
+            transform: translateY(-3px);
+        }
+
+        #yes-button {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        #yes-button:hover {
+            box-shadow: 0 15px 40px rgba(56, 239, 125, 0.5);
+        }
+
+        #no-button {
+            background: linear-gradient(135deg, #eb3349, #f45c43);
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        #no-button:hover {
+            box-shadow: 0 15px 40px rgba(235, 51, 73, 0.5);
+        }
+
+        /* Hình trái tim to khi đồng ý */
+        #big-heart {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        #big-heart span {
+            font-size: 250px;
+            animation: heartbeat 1.5s infinite;
+            filter: drop-shadow(0 20px 40px rgba(255, 20, 147, 0.5));
+        }
+
+        #big-heart p {
+            font-size: 32px;
+            color: #ff1493;
+            margin-top: 30px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animation cho trái tim nhấp nháy */
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.15); }
+        }
+
+        /* Animation fade-in */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Hiệu ứng hoa rơi */
+        .flower {
+            position: fixed;
+            font-size: 30px;
+            animation: fall linear infinite;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.8;
+        }
+
+        @keyframes fall {
+            0% { 
+                top: -10%; 
+                opacity: 0.8;
+                transform: translateX(0) rotate(0deg);
+            }
+            100% { 
+                top: 110%; 
+                opacity: 0;
+                transform: translateX(100px) rotate(360deg);
+            }
+        }
+
+        /* Tạo nhiều hoa rơi với timing khác nhau */
+        .flower:nth-child(1) { left: 5%; animation-duration: 10s; animation-delay: 0s; }
+        .flower:nth-child(2) { left: 15%; animation-duration: 12s; animation-delay: 2s; }
+        .flower:nth-child(3) { left: 25%; animation-duration: 8s; animation-delay: 4s; }
+        .flower:nth-child(4) { left: 35%; animation-duration: 11s; animation-delay: 1s; }
+        .flower:nth-child(5) { left: 45%; animation-duration: 9s; animation-delay: 3s; }
+        .flower:nth-child(6) { left: 55%; animation-duration: 13s; animation-delay: 5s; }
+        .flower:nth-child(7) { left: 65%; animation-duration: 10s; animation-delay: 2s; }
+        .flower:nth-child(8) { left: 75%; animation-duration: 12s; animation-delay: 4s; }
+        .flower:nth-child(9) { left: 85%; animation-duration: 11s; animation-delay: 1s; }
+        .flower:nth-child(10) { left: 95%; animation-duration: 9s; animation-delay: 3s; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            h1 { 
+                font-size: 1.4em;
+                margin-bottom: 15px;
+            }
+            .content-text { 
+                font-size: 14px;
+                margin: 10px 0;
+            }
+            .content-text strong {
+                font-size: 16px;
+            }
+            #gift-box { 
+                font-size: 70px;
+                margin-top: 30px;
+            }
+            #countdown { 
+                font-size: 20px; 
+                width: 45px; 
+                height: 45px; 
+            }
+            #instruction {
+                font-size: 16px;
+                margin-top: 20px;
+            }
+            #big-heart span { 
+                font-size: 120px; 
+            }
+            #big-heart p { 
+                font-size: 18px; 
+                padding: 0 20px;
+                margin-top: 15px;
+            }
+            #love-message { 
+                padding: 20px 15px;
+                margin: 10px 0;
+            }
+            img { 
+                max-width: 130px;
+                margin: 15px 0;
+            }
+            .heart {
+                font-size: 40px;
+                margin: 10px 0;
+            }
+            .signature {
+                font-size: 16px;
+                margin-top: 10px;
+            }
+            .choice-button { 
+                padding: 12px 25px; 
+                font-size: 15px;
+                margin: 8px;
+                display: inline-block !important;
+            }
+            #read-button { 
+                padding: 12px 25px; 
+                font-size: 15px;
+                margin-top: 15px;
+            }
+        }
+        
+        /* Cho màn hình rất nhỏ */
+        @media (max-width: 480px) {
+            h1 { 
+                font-size: 1.2em;
+                line-height: 1.3;
+            }
+            .content-text { 
+                font-size: 13px;
+            }
+            #gift-box { 
+                font-size: 60px;
+            }
+            img { 
+                max-width: 110px;
+            }
+            .choice-button { 
+                padding: 10px 20px; 
+                font-size: 14px;
+            }
+            #read-button { 
+                padding: 10px 20px; 
+                font-size: 14px;
+            }
+            .content-text[style*="font-size: 20px"] {
+                font-size: 16px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hoa rơi -->
+    <div class="flower">🌸</div>
+    <div class="flower">🌹</div>
+    <div class="flower">🌷</div>
+    <div class="flower">💐</div>
+    <div class="flower">🌺</div>
+    <div class="flower">🌻</div>
+    <div class="flower">🌼</div>
+    <div class="flower">🌹</div>
+    <div class="flower">🌸</div>
+    <div class="flower">💖</div>
+
+    <!-- Hộp quà với đếm ngược -->
+    <div id="gift-container">
+        <div id="gift-box" onclick="openGift()">
+            🎁
+            <div id="countdown">15</div>
+        </div>
+        <p id="instruction">✨ Đợi đến khi hộp quà sáng lên nhé... ✨</p>
+    </div>
+
+    <!-- Nội dung tỏ tình -->
+    <div id="love-message">
+        <h1>💌 Lời Nhắn Dành Cho Nguyễn Thị Tuyết Nhi 💌</h1>
+        <img src="https://i2-prod.mirror.co.uk/incoming/article11812659.ece/ALTERNATES/s1200/The-Feline-World-Gathers-For-The-Supreme-Cat-Show-2017.jpg" alt="Ảnh mèo cute" />
+        
+        <p class="content-text"><strong>Nàng yêu ơi,</strong></p>
+        
+        <p class="content-text">
+            Trong suốt những năm qua, sự hèn nhát của mình đã không cho phép mình nói ra điều này. 
+            Từ mấy tháng trước, mình đã cố bắt chuyện lại với bạn và kéo dài đến hiện tại.
+        </p>
+        
+        <p class="content-text">
+            Sự dũng cảm của tôi và cũng như là tình yêu dành cho bạn <strong>"Nguyễn Thị Tuyết Nhi"</strong> ngày càng to lớn. 
+            Hôm nay tôi mới có sự can đảm để nói lên điều này.
+        </p>
+        
+        <p class="heart">❤️</p>
+        
+        <p class="content-text" style="text-align: center; font-size: 20px; color: #ff1493; font-weight: bold; line-height: 1.4;">
+            Tôi yêu bạn!<br>
+            Liệu bạn có đồng ý làm người yêu tôi không?<br>
+            Liệu bạn có cùng bước với tôi?
+        </p>
+        
+        <p class="signature">
+            Yêu em,<br>
+            Phạm Đại Phát 💕
+        </p>
+    </div>
+
+    <!-- Nút "Nàng đã đọc xong chưa?" -->
+    <button id="read-button" onclick="showChoices()">Nàng đã đọc xong chưa? 😊</button>
+
+    <!-- Nút lựa chọn -->
+    <div>
+        <button id="yes-button" class="choice-button" onclick="agree()">Mình đồng ý 💕</button>
+        <button id="no-button" class="choice-button" onclick="disagree()">Mình không đồng ý 😢</button>
+    </div>
+
+    <!-- Hình trái tim to khi đồng ý -->
+    <div id="big-heart">
+        <span>❤️</span>
+        <p>Yay! Anh yêu em nhiều lắm! 💖🎉</p>
+        <p style="font-size: 20px; margin-top: 20px;">Chúng ta sẽ viết nên câu chuyện tình yêu đẹp nhất! 🌟</p>
+    </div>
+
+    <script>
+        let countdown = 15;
+        const countdownElement = document.getElementById('countdown');
+        const giftBox = document.getElementById('gift-box');
+        const instruction = document.getElementById('instruction');
+
+        // Bắt đầu đếm ngược khi trang load
+        const timer = setInterval(() => {
+            countdown--;
+            countdownElement.textContent = countdown;
+            if (countdown <= 0) {
+                clearInterval(timer);
+                countdownElement.style.display = 'none';
+                giftBox.classList.add('enabled');
+                instruction.innerHTML = '🎁 Nhấn vào hộp quà để mở nhé! 🎁';
+                instruction.style.animation = 'heartbeat 1s infinite';
+            }
+        }, 1000);
+
+        function openGift() {
+            if (!giftBox.classList.contains('enabled')) return;
+            document.getElementById('gift-container').style.display = 'none';
+            document.getElementById('instruction').style.display = 'none';
+            document.getElementById('love-message').style.display = 'block';
+            document.getElementById('read-button').style.display = 'inline-block';
+        }
+
+        function showChoices() {
+            document.getElementById('read-button').style.display = 'none';
+            document.getElementById('yes-button').style.display = 'inline-block';
+            document.getElementById('no-button').style.display = 'inline-block';
+        }
+
+        function agree() {
+            document.getElementById('big-heart').style.display = 'flex';
+            document.getElementById('yes-button').style.display = 'none';
+            document.getElementById('no-button').style.display = 'none';
+            
+            // Tạo pháo hoa bằng emoji
+            createFireworks();
+        }
+
+        let yesScale = 1;
+        let noScale = 1;
+
+        function disagree() {
+            // Tăng kích thước nút "Đồng ý"
+            yesScale += 0.3;
+            let yesBtn = document.getElementById('yes-button');
+            yesBtn.style.transform = `scale(${yesScale})`;
+            yesBtn.style.fontSize = `${20 + (yesScale - 1) * 15}px`;
+            yesBtn.style.padding = `${18 + (yesScale - 1) * 10}px ${40 + (yesScale - 1) * 20}px`;
+
+            // Giảm kích thước nút "Không đồng ý"
+            noScale = Math.max(noScale - 0.2, 0.2);
+            let noBtn = document.getElementById('no-button');
+            noBtn.style.transform = `scale(${noScale})`;
+            noBtn.style.fontSize = `${Math.max(20 * noScale, 8)}px`;
+            noBtn.style.padding = `${Math.max(18 * noScale, 5)}px ${Math.max(40 * noScale, 15)}px`;
+            
+            // Nếu nút "Không đồng ý" quá nhỏ, làm mờ dần
+            if (noScale <= 0.4) {
+                noBtn.style.opacity = noScale;
+            }
+
+            // Random messages
+            const messages = [
+                "Hãy suy nghĩ lại nhé! Anh yêu em lắm! 💕",
+                "Em thử nhấn nút xanh xem, anh hứa sẽ yêu em hết mình! 🥰",
+                "Anh sẽ đợi em mãi mãi! 💖",
+                "Nút xanh kia đang chờ em đấy! 😊",
+                "Nút xanh to hơn rồi đấy, em thấy chưa? 😄",
+                "Anh biết em sẽ chọn đúng thôi! 💚"
+            ];
+            alert(messages[Math.floor(Math.random() * messages.length)]);
+        }
+
+        function createFireworks() {
+            const colors = ['❤️', '💖', '💕', '💗', '💓', '💝', '🎉', '✨', '⭐', '🌟'];
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    firework.textContent = colors[Math.floor(Math.random() * colors.length)];
+                    firework.style.position = 'fixed';
+                    firework.style.left = Math.random() * 100 + '%';
+                    firework.style.top = Math.random() * 100 + '%';
+                    firework.style.fontSize = (Math.random() * 30 + 20) + 'px';
+                    firework.style.zIndex = '1001';
+                    firework.style.animation = 'fadeIn 0.5s ease-in-out, fadeOut 2s ease-in-out 0.5s';
+                    document.body.appendChild(firework);
+                    setTimeout(() => firework.remove(), 2500);
+                }, i * 100);
+            }
+        }
+
+        // Thêm animation fadeOut
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeOut {
+                from { opacity: 1; transform: scale(1); }
+                to { opacity: 0; transform: scale(0.5); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
